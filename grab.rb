@@ -20,17 +20,19 @@ def download_images_and_create_video(count, delay)
 
   paths = Dir["tmp/image*"]
   paths.each_with_index do |path, index|
-    FileUtils.cp(path, "#{directory}/image-#{index}.jpg")
-    FileUtils.mv(path, "images")
+    #FileUtils.cp(path, "images")
+    FileUtils.mv(path, "#{directory}/image-#{index}.jpg")
   end
-  files = Dir["#{directory}/image*"]
-  out_path = "videos/video-#{video_stamp}.mp4"
-  result = system("ffmpeg -framerate 5 -i #{directory}/image-%d.jpg -vf scale=640:-1,format=yuv420p -vcodec libx264 -preset slow -crf 34 #{out_path}")
-  FileUtils.rm_rf(directory)
+  #Thread.new do
+    files = Dir["#{directory}/image*"]
+    out_path = "videos/video-#{video_stamp}.mp4"
+    result = system("ffmpeg -framerate 5 -i #{directory}/image-%d.jpg -vf scale=640:-1,format=yuv420p -vcodec libx264 -preset slow -crf 32 #{out_path}")
+    FileUtils.rm_rf(directory)
+  #end
 end
 
 loop do
-  download_images_and_create_video(180, 0.25)
+  download_images_and_create_video(320, 0.15)
 end
 
 
